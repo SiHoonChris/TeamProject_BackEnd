@@ -11,6 +11,7 @@
 Spring Tool Suite 3  
 Apache Tomcat 9.0  
 MySQL 8.0.31  
+AWS  
 2) Tech Stack  
 Java(SE11)  
 Spring Legacy  
