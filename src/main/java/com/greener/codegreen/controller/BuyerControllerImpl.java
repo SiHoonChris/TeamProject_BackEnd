@@ -8,15 +8,22 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.greener.codegreen.common.PageMaker;
@@ -32,13 +39,40 @@ import com.greener.codegreen.service.BuyerService;
 public class BuyerControllerImpl implements BuyerController {
 	private static final Logger logger = LoggerFactory.getLogger(BuyerControllerImpl.class);
 	@Autowired
-	private	BuyerDTO	buyerDTO;
+	private	BuyerDTO	 buyerDTO;
 	@Autowired
-	private	BuyerService	buyerService;
+	private	BuyerService buyerService;
 	
+	// SiHoonChris(이시훈)
 	//-----------------------------------------------------------------------------------------------------------
-    // 로그인(vue.js에서 입력값 DB로 전송, 결과 조회)(시훈)
-	//-----------------------------------------------------------------------------------------------------------
+	// KAKAO 로그인
+	@GetMapping(value="/KAKAOlogin")
+	//@CrossOrigin(origins="http://localhost:8080")
+	public @ResponseBody String KakaoCallback(String code) {
+		RestTemplate rt = new RestTemplate();
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+		
+		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+		params.add("grant_type", "authorization_code");
+		params.add("client_id", "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+		params.add("redirect_uri", "http://localhost:8086/buyer/KAKAOlogin");
+		params.add("code", code);
+		
+		HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest = new HttpEntity<>(params, headers);
+		
+		ResponseEntity<String> response = rt.exchange(
+			"https://kauth.kakao.com/oauth/token",
+			HttpMethod.POST,
+			kakaoTokenRequest,
+			String.class
+		);
+		
+		return response.getBody();
+	} // KakaoCallback()
+	
+    // 로그인(vue.js에서 입력값 DB로 전송, 결과 조회)
 	@PostMapping(value="/login")
 	@CrossOrigin(origins="http://localhost:8080")
 	@ResponseBody
@@ -48,9 +82,7 @@ public class BuyerControllerImpl implements BuyerController {
 		return buyerInfo;
 	} // login()
 	
-	//-----------------------------------------------------------------------------------------------------------
-	// 회원가입 화면으로 이동(시훈)
-	//-----------------------------------------------------------------------------------------------------------
+	// 회원가입 화면으로 이동
 	@Override
 	@RequestMapping(value="/signup", method=RequestMethod.GET)
 	public ModelAndView signUp(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -58,10 +90,8 @@ public class BuyerControllerImpl implements BuyerController {
 		mav.setViewName("/buyer/signUp1Start");
 		return mav;
 	} // singIn()
-	
-	//-----------------------------------------------------------------------------------------------------------
-	// 약관 동의 페이지로 이동(시훈)
-	//-----------------------------------------------------------------------------------------------------------
+
+	// 약관 동의 페이지로 이동
 	@Override
 	@RequestMapping(value="/Agreement", method=RequestMethod.GET)
 	public ModelAndView toAgreementPage(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -70,9 +100,7 @@ public class BuyerControllerImpl implements BuyerController {
 		return mav;
 	} // toAgreementPage()
 	
-	//-----------------------------------------------------------------------------------------------------------
-	// 정보 입력 페이지로 이동(시훈)
-	//-----------------------------------------------------------------------------------------------------------
+	// 정보 입력 페이지로 이동
 	@Override
 	@RequestMapping(value="/Info", method=RequestMethod.GET)
 	public ModelAndView toMemberInfoPage(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -81,9 +109,20 @@ public class BuyerControllerImpl implements BuyerController {
 		return mav;
 	} // toMemberInfoPage()
 	
+	// 회원가입 완료 페이지로 이동
+	@Override
+	@RequestMapping(value="/done", method=RequestMethod.POST)
+	public ModelAndView signUpFinish(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		ModelAndView mav = new ModelAndView();
+		mav.setViewName("/buyer/signUp4Finish");
+		return mav;
+	} // singInFinish()
 	//-----------------------------------------------------------------------------------------------------------
-	// 아이디 중복 검사(민준)
+	
+	
+	// alsdn4498(김민준)
 	//-----------------------------------------------------------------------------------------------------------
+	// 아이디 중복 검사
 	@Override
 	@ResponseBody
 	@RequestMapping(value = "/idCheck", method = RequestMethod.POST)
@@ -94,9 +133,7 @@ public class BuyerControllerImpl implements BuyerController {
 		return result;
 	} // idCheck()
 	
-	//-----------------------------------------------------------------------------------------------------------
-	// 회원가입 처리하기(민준)
-	//-----------------------------------------------------------------------------------------------------------
+	// 회원가입 처리하기
 	@Override
 	@RequestMapping(value = "/addBuyer", method = RequestMethod.POST)
 	public int addBuyer(BuyerDTO buyerDTO, HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -106,20 +143,7 @@ public class BuyerControllerImpl implements BuyerController {
 		return buyerService.addBuyer(buyerDTO); // �뜲�씠�꽣 泥섎━ �셿猷� 嫄댁닔瑜� ���옣�븷 蹂��닔
 	} // addBuyer()
 	
-	//-----------------------------------------------------------------------------------------------------------
-	// 회원가입 완료 페이지로 이동(시훈)
-	//-----------------------------------------------------------------------------------------------------------
-	@Override
-	@RequestMapping(value="/done", method=RequestMethod.POST)
-	public ModelAndView signUpFinish(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		ModelAndView mav = new ModelAndView();
-		mav.setViewName("/buyer/signUp4Finish");
-		return mav;
-	} // singInFinish()
-	
-	//-----------------------------------------------------------------------------------------------------------
 	// 소비자 리스트 조회
-	//-----------------------------------------------------------------------------------------------------------
 	@Override
 	@RequestMapping(value = "/buyerList", method = RequestMethod.GET)
 	public ModelAndView buyerList(SearchCriteria scri) throws Exception {
@@ -140,9 +164,7 @@ public class BuyerControllerImpl implements BuyerController {
 		return mav;
 	} // buyerList()
 
-	//-----------------------------------------------------------------------------------------------------------
 	// 소비자 상세 조회
-	//-----------------------------------------------------------------------------------------------------------
 	@RequestMapping(value ="/buyerDetail", method = RequestMethod.GET)
 	@Override
 	public String buyerDetail(Model model, HttpServletRequest request) throws Exception {
@@ -155,6 +177,7 @@ public class BuyerControllerImpl implements BuyerController {
 		
 		return "/buyer/buyerDetail";
 	} // buyerDetail()
+	//-----------------------------------------------------------------------------------------------------------
 	
-
+	
 } // End - public class BuyerControllerImpl

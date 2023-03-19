@@ -147,7 +147,7 @@
     		font-size: 10px;
     	}
 	</style>
-	<script> // 제이쿼리
+	<script>
 		$(function(){
 			// id 입력
 			$("label[id=id]").click(function(){
@@ -162,7 +162,7 @@
 					$("#validity").css({"display":"block", "color":"red"}).text("ID를 입력해주세요.");
 				}
 				else {
-					fn_idCheck_format(); // ID 형식 체크(ID 중복 여부 포함)
+					fn_idCheck_format();
 				}
 			});
 			
@@ -172,7 +172,7 @@
 				$("#pw_result").css({"display":"none"});
 				$("input[id=b_pwd]").css("display", "block").focus();
 			});
-			$("#b_pwd").blur(function(){  // 비밀번호 일치 확인 : 비밀번호 확인 과정까지 마친 후, 최초 설정한 비밀번호가 바뀌는 경우 대비
+			$("#b_pwd").blur(function(){
 				if($("input[id=b_pwd]").val().length===0) {					
 					$("label[id=pwd]").css("display", "block");
 					$("input[id=b_pwd]").css("display", "none");
@@ -189,7 +189,7 @@
 				$("label[id=repwd]").css("display", "none");
 				$("input[id=b_repwd]").css("display", "block").focus();
 			});
-			$("#b_repwd").blur(function(){  // 비밀번호 일치 확인
+			$("#b_repwd").blur(function(){
 				fn_compare_pwd();
 				if($("input[id=b_repwd]").val().length===0) {					
 					$("label[id=repwd]").css("display", "block");
@@ -308,16 +308,16 @@
 			// ------------------------------------------------------
 			//                        함수 정리
 			// ------------------------------------------------------
-			function fn_idCheck_format() { // ID 형식 체크(by 시훈 리)
+			function fn_idCheck_format() { // ID 형식 체크 (입력값 유효성 검사)
 				if(!/^(?=.*[a-zA-Z])(?=.*[0-9]).{6,10}$/.test($('#b_id').val())){ 
 				    $("#validity").css({"display":"block", "color":"red"}).text("입력값 확인해주세요 - 영어/숫자 포함한 6-10자");
 				}
 				else {
-					fn_idCheck_duplication(); // ID 중복 확인
+					fn_idCheck_duplication();
 				}
-			}
+			} // fn_idCheck_format() - ID 형식 체크
 			
-			function fn_idCheck_duplication() { // ID 중복 확인(by 민준 킴)
+			function fn_idCheck_duplication() { // ID 중복 확인 - alsdn4498(김민준)
 				$.ajax({
 					url:		"/buyer/idCheck",
 					type:		"post",
@@ -332,9 +332,9 @@
 						}
 					}
 				});	
-			}
+			} // fn_idCheck_duplication() - ID 중복 확인
 			
-			function checkPassword(b_pwd, b_id){ // 비밀번호 형식 확인(by 민준 킴)
+			function checkPassword(b_pwd, b_id){ // 비밀번호 형식 확인 - alsdn4498(김민준)
 				let $pw_result = $("#pw_result");
 				
 				if(!/^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,15}$/.test(b_pwd)){ 
@@ -362,9 +362,9 @@
 					$pw_result.css({"display":"block", "color":"blue"}).text("사용 가능합니다.");
 					return true;
 				}
-			}
+			} // checkPassword(b_pwd, b_id) -  비밀번호 형식 확인
 			
-			function fn_compare_pwd() { // 비밀번호 일치 여부 확인(by 민준 킴)
+			function fn_compare_pwd() { // 비밀번호 일치 여부 확인 - alsdn4498(김민준)
 				const $pwd1 = $("#b_pwd").val();
 				const $pwd2 = $("#b_repwd").val();
 	
@@ -377,9 +377,9 @@
 			    else {
 			    	$("#pw_equal").css({"display":"none"});
 			    }
-			}
+			} // fn_compare_pwd() - 비밀번호 일치 여부 확인
 			
-			function fn_submit() { // 회원가입 정보 DB에 전송(by 시훈 리)
+			function fn_submit() { // 회원가입 정보 DB에 전송
 				$.ajax({
 					url:      "/buyer/addBuyer",
 					type:     "post",
@@ -405,11 +405,12 @@
 						}
 					}
 				});
-			}
+			} // fn_submit() - 회원가입 정보 DB에 전송
+			
 		});
 	</script>
-	<script> // 자바스크립트
-		function sample6_execDaumPostcode() { // 카카오 API 구현 (by 민준 킴)
+	<script>
+		function sample6_execDaumPostcode() { // 다음 카카오 주소 API 구현 - alsdn4498(김민준)
 			new daum.Postcode({
 	    		oncomplete: function(data) {
 	        		var addr = ''; // 주소 변수
@@ -436,17 +437,16 @@
 	        		document.getElementById("sample6_detailAddress").focus();
 	    		}
 			}).open();
-		}
+		} //  sample6_execDaumPostcode() - 다음 카카오 주소 API 구현
 	
 		function select(target) { // 이메일 선택/입력
 			const text = target.options[target.selectedIndex].text;
 			document.querySelector("#b_email").value = text;
 			document.querySelector("#b_email").focus();
-		}
+		} // select(target) - 이메일 선택/입력
 	</script>
 </head>
 <body>
-	<!-- 헤더/푸터 따로 만들어서 관리 jsp:include ~ -->
 	<header>
 		<a href="http://localhost:8080/"><img src="${contextPath}/resources/images/green_icon.png" alt="logo"/></a>
 	</header>

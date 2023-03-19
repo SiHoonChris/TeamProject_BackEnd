@@ -7,8 +7,13 @@ import com.greener.codegreen.dto.ProductDTO;
 import com.greener.codegreen.dto.ProductViewDTO;
 
 public interface AdminService {
-	// 누적판매량 상위 10개 상품 전시(시훈)
+
+	// ------------------------SiHoonChris---------------------------
+	// 누적판매량 상위 10개 상품 전시
 	public List<ProductDTO> top10products() throws Exception;
+	// ------------------------SiHoonChris---------------------------
+	
+	
 	
 	// 移댄뀒怨좊━ �샇異�
 	public List<CategoryDTO> category() throws Exception;

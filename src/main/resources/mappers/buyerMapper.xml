@@ -20,7 +20,8 @@
 		<result property="b_amount"	   column="b_amount"/>
 	</resultMap>
 	
-	<!-- 로그인(시훈) -->
+	
+	<!-- 로그인(SiHoonChris) -->
 	<select id="loginByIdPwd" parameterType="com.greener.codegreen.dto.BuyerDTO" resultType="com.greener.codegreen.dto.BuyerDTO">
 		<![CDATA[
 			SELECT * 
@@ -29,7 +30,9 @@
 		]]>
 	</select>
 	
-	<!--  아이디 중복 확인(민준) -->
+	
+	
+	<!--  아이디 중복 확인(alsdn4498) -->
 	<select id ="idCheck" parameterType="com.greener.codegreen.dto.BuyerDTO" resultType="INT">
 		<![CDATA[
 			SELECT count(*)
@@ -38,7 +41,7 @@
 		]]>
 	</select>
 	
-	<!-- 회원 가입(민준) -->
+	<!-- 회원 가입(alsdn4498) -->
 	<insert id="addBuyer" parameterType="com.greener.codegreen.dto.BuyerDTO">
 		<![CDATA[
 			INSERT INTO Buyer 
@@ -47,7 +50,7 @@
 		]]>
 	</insert>
 
-	<!-- 소비자 전체 회원의 수(민준) -->
+	<!-- 소비자 전체 회원의 수(alsdn4498) -->
 	<select id = "totalCount" parameterType="com.greener.codegreen.dto.BuyerDTO" resultType="INT">
 		<![CDATA[
 			SELECT count(*)
@@ -57,7 +60,7 @@
 		<include refid="searchMySQL"/>
 	</select>
 	
-	<!-- 검색 조건(민준), MySQL -->
+	<!-- 검색 조건(alsdn4498)-->
 	<sql id="searchMySQL">
 		<if test="searchType != null">
 			<if test="searchType == 'b_id'.toString()">AND b_id LIKE CONCAT('%', #{keyword}, '%')</if>
@@ -65,7 +68,7 @@
 		</if>
 	</sql>
 	
-	<!-- 소비자 전체 리스트(민준) -->
+	<!-- 소비자 전체 리스트(alsdn4498) -->
 	<select id = "buyerList" parameterType="hashmap" resultType="com.greener.codegreen.dto.BuyerDTO">
 	 	<![CDATA[
 	 		SELECT	b_id, b_name, b_birth, b_email, b_address2, b_address3, b_grade, b_joindate, b_phone, b_amount, b_num
@@ -84,7 +87,7 @@
 		]]>
 	</select>
 	
-	<!--  구매자 아이디 상세 조회 -->
+	<!--  구매자 아이디 상세 조회(alsdn4498) -->
 	<select id="buyerDetail" parameterType="com.greener.codegreen.dto.BuyerDTO" resultType="com.greener.codegreen.dto.BuyerDTO">
 		<![CDATA[
 			SELECT	b_id, b_name, b_birth, b_email, b_address1, b_address2, b_address3, b_grade, b_joindate, b_phone

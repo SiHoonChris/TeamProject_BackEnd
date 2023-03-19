@@ -21,9 +21,9 @@ public class BuyerDTO {
 	private	int	    b_amount;	 // 구매자 누적 금액
 	
 	public	BuyerDTO()	{}		 // 기본생성자
-	public	BuyerDTO
-	(String b_id, String b_pwd, String b_name,String b_birth, String b_email, String b_address1,String b_address2,String b_address3, String b_grade,String b_phone,int b_amount)
-	{
+	public	BuyerDTO(String b_id, String b_pwd, String b_name,String b_birth, String b_email,
+			         String b_address1,String b_address2,String b_address3, String b_grade,
+			         String b_phone,int b_amount) {
 		this.b_id	    = b_id;
 		this.b_pwd	    = b_pwd;
 		this.b_name	    = b_name;

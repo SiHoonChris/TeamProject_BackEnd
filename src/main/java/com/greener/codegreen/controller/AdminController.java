@@ -47,9 +47,10 @@ public class AdminController {
 	private String uploadPath;
 	
 	
-	// ---------------------------------------------------------------------------------------
-	// 누적판매량 상위 10개 상품 전시(시훈)
-	// ---------------------------------------------------------------------------------------
+	
+	// -------------------------------------SiHoonChris----------------------------------------
+	
+	// 누적판매량 상위 10개 상품 전시
 	@PostMapping(value="product")
 	@CrossOrigin(origins="http://localhost:8080")
 	@ResponseBody
@@ -57,6 +58,10 @@ public class AdminController {
 		List<ProductDTO> productList = adminService.top10products();
 		return productList;
 	} // top10products()
+	
+	// -------------------------------------SiHoonChris----------------------------------------
+	
+	
 	
 	
 	/**

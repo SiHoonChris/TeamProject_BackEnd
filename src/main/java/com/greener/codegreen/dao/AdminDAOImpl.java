@@ -20,13 +20,15 @@ public class AdminDAOImpl implements AdminDAO {
 	private static String namespace = "com.greener.codegreen.adminMapper";
 	
 	
-	// ---------------------------------------------------------------------------------------
-	// 누적판매량 상위 10개 상품 전시(시훈)
-	// ---------------------------------------------------------------------------------------
+	// -------------------------------------SiHoonChris----------------------------------------
+	
+	// 누적판매량 상위 10개 상품 전시
 	@Override
 	public List<ProductDTO> top10products() throws Exception {
 		return sql.selectList(namespace+".top10products");
 	} // top10products()	
+	
+	// -------------------------------------SiHoonChris----------------------------------------
 	
 	
 	
