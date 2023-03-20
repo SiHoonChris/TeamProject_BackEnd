@@ -10,8 +10,7 @@
 1) Environment  
 Spring Tool Suite 3  
 Apache Tomcat 9.0  
-MySQL 8.0.31  
-AWS  
+MySQL 8.0.31 - AWS(DB)  
 2) Tech Stack  
 Java(SE11)  
 Spring Legacy  
