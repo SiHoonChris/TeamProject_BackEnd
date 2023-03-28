@@ -26,9 +26,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.greener.codegreen.common.PageMaker;
 import com.greener.codegreen.common.SearchCriteria;
 import com.greener.codegreen.dto.BuyerDTO;
+import com.greener.codegreen.dto.OAuthToken;
 import com.greener.codegreen.service.BuyerService;
 
 //-----------------------------------------------------------------------------------------------------------
@@ -45,10 +49,11 @@ public class BuyerControllerImpl implements BuyerController {
 	
 	// SiHoonChris(이시훈)
 	//-----------------------------------------------------------------------------------------------------------
-	// KAKAO 로그인
+	// 카카오 API 로그인
 	@GetMapping(value="/KAKAOlogin")
-	//@CrossOrigin(origins="http://localhost:8080")
 	public @ResponseBody String KakaoCallback(String code) {
+		
+		// 발급된 인가코드로 Access_Token 생성
 		RestTemplate rt = new RestTemplate();
 		
 		HttpHeaders headers = new HttpHeaders();
@@ -69,7 +74,36 @@ public class BuyerControllerImpl implements BuyerController {
 			String.class
 		);
 		
-		return response.getBody();
+		// 생성된 토큰으로 사용자 정보 추출
+		ObjectMapper objectMapper = new ObjectMapper();
+		OAuthToken oauthToken = null;
+		
+		try {
+			oauthToken = objectMapper.readValue(response.getBody(), OAuthToken.class);
+		} catch(JsonMappingException e) {
+			e.printStackTrace();
+		} catch(JsonProcessingException e) {
+			e.printStackTrace();
+		}
+		
+		RestTemplate rt2 = new RestTemplate();
+		
+		HttpHeaders headers2 = new HttpHeaders();
+		headers2.add("Authorization", "Bearer "+oauthToken.getAccess_token());
+		headers2.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+		
+		HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest2 = new HttpEntity<>(headers2);
+		
+		ResponseEntity<String> response2 = rt2.exchange(
+			"https://kapi.kakao.com/v2/user/me",
+			HttpMethod.POST,
+			kakaoTokenRequest2,
+			String.class
+		);
+		
+		System.out.println(response2.getBody());
+		
+		return response2.getBody();
 	} // KakaoCallback()
 	
     // 로그인(vue.js에서 입력값 DB로 전송, 결과 조회)
@@ -118,6 +152,7 @@ public class BuyerControllerImpl implements BuyerController {
 		return mav;
 	} // singInFinish()
 	//-----------------------------------------------------------------------------------------------------------
+	
 	
 	
 	// alsdn4498(김민준)
